@@ -4,7 +4,7 @@
     var Calculator;
 
     /*
-     * Create and return a BigNumber constructor.
+     * Create and return a Calculator constructor.
      */
     function another() {
         Calculator = {
