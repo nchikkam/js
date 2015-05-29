@@ -1,0 +1,25 @@
+{
+  "name": "calculator.js",
+  "description": "A Simple library for doing calculations with Numbers ;) ",
+  "version": "1.0.0",
+  "keywords": [
+    "calculator"
+  ],
+  "repository" : {
+    "type": "git",
+    "url": "<git url to be done>"
+  },
+  "main": "calculator",
+  "author": {
+    "name": "Narayana Chikkam",
+    "email": "nchikkam@gmail.com"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "node ./test/all-tests.js",
+    "build": "uglifyjs calculator.js --source-map calculator.js.map -c -m -o calculator.min.js --preamble \"/* calculator.js v2.0.7 git_url/calculator.js/LICENCE */\""
+  }
+}
