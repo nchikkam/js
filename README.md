@@ -6,6 +6,8 @@
 # Testing:
 1. Pull the repo folder.
 
-2. run 'npm test' to run all the tests
+2. run 'npm test'  or 'node test/all-tests' to run all the tests
 
 3. run 'node test/add' to run the method add.
+
+4. Same thing could be available by opening the 'browser/all-tests.html' file
