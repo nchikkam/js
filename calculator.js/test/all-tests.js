@@ -5,7 +5,12 @@ var arr,
 
 console.log( '\n STARTING TESTS...\n' );
 
-['add'].forEach( function (method) {
+[
+	'add',
+	'sub',
+	'mul',
+	'div'
+].forEach( function (method) {
     arr = require('./' + method);
     passed += arr[0];
     total += arr[1];
