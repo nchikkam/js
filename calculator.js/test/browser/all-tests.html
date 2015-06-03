@@ -13,12 +13,8 @@
       total = 0,
       i = 0,
       start = +new Date(),
-      methods = [
-           'add',
-           'sub',
-           'mul',
-           'div'
-      ];
+      
+      methods = Object.getOwnPropertyNames(Calculator)
 
   function load() {
       var head = document.getElementsByTagName("head")[0],

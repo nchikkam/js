@@ -5,12 +5,8 @@ var arr,
 
 console.log( '\n STARTING TESTS...\n' );
 
-[
-	'add',
-	'sub',
-	'mul',
-	'div'
-].forEach( function (method) {
+Calculator = require('../Calculator')
+Object.getOwnPropertyNames(Calculator).forEach( function (method) {
     arr = require('./' + method);
     passed += arr[0];
     total += arr[1];
