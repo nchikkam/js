@@ -1,0 +1,25 @@
+{
+  "name": "algos.js",
+  "description": "A Simple library for doing calculations with Numbers ;) ",
+  "version": "1.0.0",
+  "keywords": [
+    "algos"
+  ],
+  "repository" : {
+    "type": "git",
+    "url": "<git url to be done>"
+  },
+  "main": "algos",
+  "author": {
+    "name": "Narayana Chikkam",
+    "email": "nchikkam@gmail.com"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "node ./test/all-tests.js",
+    "build": "uglifyjs algos.js --source-map algos.js.map -c -m -o algos.min.js --preamble \"/* algos.js v2.0.7 git_url/algos.js/LICENCE */\""
+  }
+}
