@@ -136,14 +136,149 @@
                     }
                 }
                 return merged;
-            }
+            },
+
+            reverse: function(str){
+                var a = str.split('');  // strings are immutable in js, so convert it to array and swap
+                var l = a.length;
+                var mid = Math.floor(l/2)-1;
+                for( var i = 0; i <= mid; i++){
+                    var t = a[i];
+                    a[i] = a[l-i-1];
+                    a[l-i-1] = t;
+                }
+                return a.join('');
+            },
+
+            reverse_words: function(str){  // ask if there would be multiple white spaces
+                var a = str.split(' ');
+                var l = a.length;
+                var mid = Math.floor(l/2)-1;
+                for( var i = 0; i <= mid; i++){
+                    var t = a[i];
+                    a[i] = a[l-i-1];
+                    a[l-i-1] = t;
+                }
+                return a.join(' ');
+
+            },
+
+            reverse_words_in_place: function(str){ 
+                var a = str.split(' ');
+                var l = a.length;
+                for( var i = 0; i < l; i++){ // reverse could be used here!
+                    a[i] = this.reverse(a[i]);
+                }
+                return a.join(' ');
+            },
+
+            first_non_repeating_char: function(str){ 
+                var lookup = {};
+                for(var i =0; i< str.length; i++){
+                    if (!lookup[str[i]]){
+                        lookup[str[i]] = 1;
+                    }else
+                        lookup[str[i]]++;
+                }
+
+                for(var i =0; i< str.length; i++){
+                    if (lookup[str[i]] == 1)
+                        return str[i];
+                }
+                return -1; //all chars repeated so -1
+            },
+
+            two_sum: function(arr, two_sum){
+                var lookup = {};
+                for (var i =0; i < arr.length; i++){
+                    if(lookup[two_sum-arr[i]])
+                        return true;
+                    else
+                        lookup[arr[i]] = true;
+                }
+                return false;
+            },
+
+            max_diff_two_elements: function(arr){
+                /*Calculate the difference between any 2 elements in the array where 
+                  large element appears after the smaller.*/
+                  var maxDiff = arr[1] - arr[0];
+                  var minElem = arr[0];
+                  for(var i = 1; i < arr.length; i++){       
+                    if(arr[i] - minElem > maxDiff)                               
+                      maxDiff = arr[i] - minElem;
+                    if(arr[i] < minElem)
+                         minElem = arr[i];                     
+                  }
+                  return maxDiff;
+            },
+
+            three_sum: function(arr, three_sum){ //O(n^2)
+                arr.sort();  // O(n log n) assuming average case Qsort ;)
+                var left, right, l = arr.length;
+                for(var i =0; i < l; i++){ // for each i, try O(n) time finding sum
+                    left = i+1; 
+                    right = l-1;
+                    while(left < right){
+                        var sum = arr[i] + arr[left]+ arr[right];
+                        if( sum == three_sum) return true;
+                        else if(sum < three_sum) left++;
+                        else right--;
+                    }
+                }
+                return false;
+            },
+
+            closestPair: function(arr, two_sum){
+                var indexOne,
+                    indexTwo,
+                    left = 0, 
+                    right = arr.length-1, 
+                    diff = Number.MAX_VALUE;
+                     
+                    while (right > left){
+                       if (Math.abs(arr[left] + arr[right] - two_sum) < diff){
+                           indexOne = left;
+                           indexTwo = right;
+                           diff = Math.abs(arr[left] + arr[right] - two_sum);
+                       }
+                 
+                       // If this pair has more sum, move to smaller values.
+                       if (arr[left] + arr[right] > two_sum)
+                           right--;
+                       else // Move to larger values
+                           left++;
+                    }
+                    return [arr[indexOne], arr[indexTwo]];
+            },
+
+            combinations: function combi(s, c,  holder){
+                    var n = s.length;
+                    if (n == 0) {
+                        holder.push(c);
+                        return holder;
+                    }
+                    for( var i=0; i < n ; i++){
+                          var t = s[0];
+                          s[0] = s[i];
+                          s[i] = t;
+
+                          combi(s.slice(1, n), c+s[0], holder)
+
+                          var t = s[0];
+                          s[0] = s[i];
+                          s[i] = t;
+                      }
+                      return holder;
+                }
+
+
+
+
 
 
 
         }; //algo object
-
-
-
         return algos;
     }
 
