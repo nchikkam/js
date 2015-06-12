@@ -253,30 +253,52 @@
             },
 
             combinations: function combi(s, c,  holder){
-                    var n = s.length;
-                    if (n == 0) {
-                        holder.push(c);
-                        return holder;
-                    }
-                    for( var i=0; i < n ; i++){
-                          var t = s[0];
-                          s[0] = s[i];
-                          s[i] = t;
-
-                          combi(s.slice(1, n), c+s[0], holder)
-
-                          var t = s[0];
-                          s[0] = s[i];
-                          s[i] = t;
-                      }
-                      return holder;
+                var n = s.length;
+                if (n == 0) {
+                    holder.push(c);
+                    return holder;
                 }
+                for( var i=0; i < n ; i++){
+                      var t = s[0];
+                      s[0] = s[i];
+                      s[i] = t;
 
+                      combi(s.slice(1, n), c+s[0], holder)
 
+                      var t = s[0];
+                      s[0] = s[i];
+                      s[i] = t;
+                  }
+                  return holder;
+            },
 
+            /*
+                //a is an input array with element names.
+                //n is the size of the entire set of elements.
+                //pos is the position in selector to fill
+                //start is the starting index for the next recursive call. Next recursion call must
+                // -  start from where the previous call set the start .
+                //k is the cardinality of the subset. 
+            */
+            subsets: function subsets(a, c, pos, start, k, holder){
+                if( k == 0 ){
+                    holder.push(c);
+                   return holder;
+                }
+                for(var i=start;i<=(a.length-k);++i){
+                  subsets(a, c+a[i], pos+1, i+1, k-1, holder);
+                }
+                return holder;
+            },
 
-
-
+            powerset: function(s){
+                var pset = [];
+                for(var i=0; i <= s.length; ++i){
+                    var kset = this.subsets(s, '', 0, 0, i, []);
+                    pset = pset.concat(kset);
+                }
+                return pset;
+            }
 
         }; //algo object
         return algos;
