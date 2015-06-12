@@ -8,6 +8,6 @@
 
 2. run 'npm test'  or 'node test/all-tests' to run all the tests
 
-3. run 'node test/add' to run the method add.
+3. run 'node test/<name-of-test or [test].js>' to run the method add.
 
 4. Same thing could be available by opening the 'browser/all-tests.html' file
