@@ -36,6 +36,12 @@ var count = (function powerset(algos) {
     TC(["a", "b"], [[], "a", "b", "ab"]);
     TC(["a", "b", "c"], [[], "a", "b", "c", "ab", "ac", "bc", "abc"]);
     TC(["a", "b", "c", "d"], [[], "a", "b", "c", "d", "ab", "ac", "ad", "bc", "bd", "cd", "abc", "abd", "acd", "bcd", "abcd"]);
+    TC(["a", "b", "c", "d", "e"], [[], 
+                                    "a", "b", "c", "d", "e",
+                                    "ab", "ac", "ad", "ae", "bc", "bd", "be", "cd", "ce", "de",
+                                    "abc", "abd", "abe", "acd", "ace", "ade", "bcd", "bce", "bde", "cde",
+                                    "abcd", "abce", "abde", "acde", "bcde", "abcde"
+                                    ]);
     
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];
