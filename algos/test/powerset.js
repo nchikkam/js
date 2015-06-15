@@ -33,6 +33,7 @@ var count = (function powerset(algos) {
         assert(String(expected), String(algos.powerset(a)));
     }
 
+    TC([], []);
     TC(["a", "b"], [[], "a", "b", "ab"]);
     TC(["a", "b", "c"], [[], "a", "b", "c", "ab", "ac", "bc", "abc"]);
     TC(["a", "b", "c", "d"], [[], "a", "b", "c", "d", "ab", "ac", "ad", "bc", "bd", "cd", "abc", "abd", "acd", "bcd", "abcd"]);
