@@ -365,6 +365,54 @@
                         max_area = area_with_top;
                 }
                 return max_area;
+            },
+
+            maxareanlogn: function getMaxArea(hist, left, right){  // divide & conquer no 'segment tree'
+                //dcmaxRecHist(int *height, int start, int end)
+                {
+
+                    console.log(left, right, Math.ceil((left+right)/2));
+                    if(left == right) return hist[left];
+                    if(left == right-1)
+                        return     Math.max( Math.max(hist[left], hist[right]), 2* Math.min(hist[left], hist[right]));
+                    
+                    var mid=Math.ceil((left+right)/2);
+
+                    var l = getMaxArea(hist, left, mid-1);
+                    var r = getMaxArea(hist, mid+1, right);
+                    //find max from one half
+                    var max = Math.max( l, r );
+                    //merge part,check whether the rectangle containing mid is larger
+                    var j=mid-1,k=mid+1;
+                    var cur_height = hist[mid];
+                    var area=0;
+                    while(true){
+                        while(j >= left && hist[j] >= cur_height)  {j--;}
+                        while(k <= right && hist[k] >= cur_height) {k++;}
+                        area = (k-j-1)*cur_height;
+                        if(area > max) {
+                            max = area;
+                        }
+
+
+                        if(j >= left && k <= right){
+                            console.log("j:" + j);
+                            console.log("k:" + k);
+                            console.log("area:" + area);
+                            cur_height = Math.max(hist[j],hist[k]);
+                            console.log("cur_height:" + cur_height);
+                        }
+                        else{
+                            if( j < left && k > right ) 
+                                break;
+                            else if(j<left) 
+                                cur_height = hist[k];
+                            else if(k>right) 
+                                cur_height = hist[j];
+                        }
+                    }
+                    return max;
+                }
             }
 
         }; //algo object
