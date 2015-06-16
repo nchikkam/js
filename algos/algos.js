@@ -354,7 +354,7 @@
                 }
              
                 // Now pop the remaining bars from stack and calculate area with every
-                // popped bar as the smallest bar
+                // popped bar as the smallest bar.
                 while (isEmpty(stack) == false){
                     tp = stack.pop();// peek into stack to get the top most element.
 

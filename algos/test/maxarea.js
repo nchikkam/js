@@ -44,6 +44,7 @@ var count = (function maxarea(algos) {
     TC([1, 0], 1);
     TC([1, 2], 2);
     TC([1, 2, 3], 4);
+    TC([1, 2, 3, 3, 2, 1], 8);
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];
