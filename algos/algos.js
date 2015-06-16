@@ -398,6 +398,33 @@
                     }
                     return max;
                 }
+            },
+
+
+            dominator: function dominator(a){ // Moore’s Voting Algorithm
+                var x = 0, count = 0;
+                for(var i = 0; i < a.length; i++) {
+                    if (count == 0){
+                        x = i
+                        count = count + 1
+                    }
+                    else if (a[i] == a[x]) 
+                        count = count + 1
+                    else
+                        count = count - 1
+                }
+
+                count = 0;
+                for (var i = 0; i < a.length; i++)
+                  if(a[i] == a[x])
+                     count++;
+
+                
+
+                if (count > a.length/2) 
+                   return a[x];
+                else
+                   return -1;
             }
 
         }; //algo object
