@@ -425,6 +425,61 @@
                    return a[x];
                 else
                    return -1;
+            },
+
+            longestpalindrome: function(s){  //manachar's algorithm O(n) time, O(n) space.
+                function convert(s) {  // 
+                    var n = s.length;
+                    if (n == 0) return "^$";
+                    var ret = "^";
+                    for (var i = 0; i < n; i++)
+                        ret += "#" + s.substr(i, 1);
+
+                    ret += "#$";
+                    return ret.split('');
+                }
+
+                function longestPalindrome(s) {
+                    /*
+                        sourcce: http://articles.leetcode.com/2011/11/longest-palindromic-substring-part-ii.html
+                        if P[ i’ ] ≤ R – i,
+                        then P[ i ] ← P[ i’ ]
+                        else P[ i ] ≥ P[ i’ ]. (Which we have to expand past the right edge (R) to find P[ i ].
+                    */
+                    var T = convert(s);
+                    var n = T.length;
+                    var P = new Array();
+                    var C = 0, R = 0;
+                    for (var i = 1; i < n-1; i++) {
+                        var i_mirror = 2*C-i; // equals to i' = C - (i-C)
+
+                        P[i] = (R > i) ? Math.min(R-i, P[i_mirror]) : 0;
+
+                        // Attempt to expand palindrome centered at i
+                        while (T[i + 1 + P[i]] == T[i - 1 - P[i]]) P[i]++;
+
+                        // If palindrome centered at i expand past R,
+                        // adjust center based on expanded palindrome.
+                        if (i + P[i] > R) {
+                            C = i;
+                            R = i + P[i];
+                        }
+                    }
+
+                    // Find the maximum element in P.
+                    var maxLen = 0;
+                    var centerIndex = 0;
+                    for (var i = 1; i < n-1; i++) {
+                        if (P[i] > maxLen) {
+                            maxLen = P[i];
+                            centerIndex = i;
+                        }
+                    }
+                    var r = s.substr((centerIndex - 1 - maxLen)/2, maxLen);
+                    return r;
+                }
+
+                return longestPalindrome(s);
             }
 
         }; //algo object
