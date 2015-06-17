@@ -480,6 +480,37 @@
                 }
 
                 return longestPalindrome(s);
+            },
+
+
+            rotatebyk: function(a, k){  // rotates left
+                
+                function reverse_s(s, b, e){
+                    var i, j, t;
+                    for( i =b, j = e-1; i < j; i++, j--){
+                        t = s[i];
+                        s[i] = s[j];
+                        s[j] = t;  
+                    }
+                }
+                //rotate_length = rotate_length%m; //if rotate_length is more than m, mod it to limit m.
+                function rotate_left(a, k){
+                    var s = a.split('');
+                    reverse_s(s, 0, k);
+                    reverse_s(s, k, s.length);
+                    reverse_s(s, 0, s.length);
+                    return s.join('');
+                }
+
+                function rotate_right(a, k){
+                    var s = a.split('');
+                    reverse_s(s, 0, s.length);
+                    reverse_s(s, 0, k-1);
+                    reverse_s(s, k, s.length);
+                }
+
+                
+                return rotate_left(a, k);
             }
 
         }; //algo object
