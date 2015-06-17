@@ -580,6 +580,113 @@
 
                 return LD(src, dst);
 
+            },
+
+            eqbriumindex: function (l){
+                var s = l.reduce(function (a, b) { return a + b; }, 0);
+                var leftsum = 0
+                for (var i=0; i< l.length; i++){
+                    s = s - l[i]
+                    if (leftsum == s)
+                        return i;
+                    leftsum = leftsum + l[i]
+                }
+                return -1
+            },
+
+            overlap: function(rectOne, rectTwo){
+                // rectOne = [left, top, right, bottom]
+                // rectTwo = [left, top, right, bottom]
+                /*
+                      Y
+                      ^  A
+                      |
+                      +              p(x1,y1)
+                      |              p(15,25)ul
+                    25.                +---------+
+                     ..                |         |
+                     ..                |         |
+                     ..                |         |
+                     ..                |         |
+                     ..                +---------+
+                     ..  +--+--+--+                p(20,2)lr
+                     ..  +--+--+  |                p(x2,y2)
+                      |  +--+  |  |
+                     2+  |  |  |  |
+                      |  |  |  |  |
+                     1+  |  |  |  |
+                      |  +--+--+--+
+                  -+--+--+--+--+--..........+--+-......-+-- > X
+                      |  1  2  3  ..........15 .  .  .  20
+                      +
+                      |
+                */
+                var px1 = rectOne[0],
+                    py1 = rectOne[1],
+                    px2 = rectOne[2],
+                    py2 = rectOne[3],
+                    qx1 = rectTwo[0],
+                    qy1 = rectTwo[1],
+                    qx2 = rectTwo[2],
+                    qy2 = rectTwo[3];
+
+                if (px2 < qx1 || px1 > qx2 || qy1 < py2 || qy2 > py1)
+                    return false
+                return true
+            },
+
+            kthbiggest: function(a, k){  // O(n)
+                var l = 0, r = a.length-1;
+                var pivot = a[k]
+                while( l < r){
+                    pivot = a[k]
+                    var i = l
+                    var j = r
+                    while( i < j){
+                        while (a[i] < pivot) i = i + 1;
+                        while (pivot < a[j]) j = j - 1;
+                        if( i <= j ){
+                             //b=a+(a=b)-b;
+                             a[j]=a[i]+(a[i]=a[j])-a[j];  // tricky way to swap two vars: b = [a, a = b][0];
+                            i = i + 1
+                            j = j -1
+                        }
+                        if (j < k) l = i;
+                        if (i > k) r = j;
+                    }
+                }
+                return pivot;
+            },
+
+            binsearch: function(arr, k){
+                var low = 0, 
+                    high = arr.length-1,
+                    mid;
+                while (low <= high){
+                    //mid = Math.floor(low + ((high-low)/2));  // taking overflow trick
+                    mid = (low + high) >> 1;
+                    
+                    if ( arr[mid] < k) 
+                        low = mid + 1;
+                    else if ( arr[mid] > k )
+                        high = mid -1;
+                    else return mid;
+                }
+                return -1;
+            },
+
+            binsearchmatrix: function (matrix, k){
+                var i = 0,
+                    j = matrix.length-1;
+                    while (i < k && j >= 0 && j < matrix.length && i < matrix.length){
+                        if (matrix[i][j] == k)
+                            return [i,j]
+                        else if (matrix[i][j] > k)
+                            j = j - 1;
+                        else
+                            i = i + 1;
+                }
+                return [-1, -1];
             }
 
         }; //algo object
