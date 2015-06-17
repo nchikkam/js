@@ -41,7 +41,8 @@ var count = (function editdistance(algos) {
         -AGGCTATCACCTGACCTCCAGGCCGA--TGCCC---
         TAG-CTATCAC--GACCGC--GGTCGATTTGCCCGAC 
     */
-    TC("ggacctcttc aaggagaact acaaaccact gctcaatgaa ataaaagagg atacaaacaa", "atggaagaac attccatgct tatgggtagg aagaatcata tcgtgaaaat ggtcatactg", 41);
+    TC("ggacctcttc aaggagaact acaaaccact gctcaatgaa ataaaagagg atacaaacaa", 
+        "atggaagaac attccatgct tatgggtagg aagaatcata tcgtgaaaat ggtcatactg", 41);
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];
