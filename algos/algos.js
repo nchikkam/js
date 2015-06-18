@@ -687,7 +687,70 @@
                             i = i + 1;
                 }
                 return [-1, -1];
+            },
+
+            mincoinsrecursive: function(coins, total){
+                function minCoinsChangeRecursive(coins, total, count){
+                    if (total <= 0) return count;
+                    var min = Number.MAX_VALUE;
+                    for(var i =0; i < coins.length; i++){
+                        var sum = minCoinsChangeRecursive(coins, total-coins[i], count+1);
+                        if (min > sum) min = sum;
+                    }
+                    return min;
+                }
+                return minCoinsChangeRecursive(coins, total, 0);
+            },
+
+
+            mincoins: function(coins, total){
+                var temp = [];
+                temp[0] = 0;
+                for(var i=1; i <= total; i++){
+                    temp[i] = Number.MAX_VALUE;
+                }
+                for(var i=0; i < coins.length; i++){
+                    for(var j=1; j <= total; j++){
+                        if(j >= coins[i])
+                            temp[j] = Math.min(temp[j], temp[j-coins[i]] +1);
+                    }
+                }
+                return temp[total];
+            },
+
+            /*
+                n is total, k is denominations
+                for i := 1 to k
+                    C[i, 0] := 0
+                for j := 1 to n
+                    C[1, j] := j
+                for i := 1 to k 
+                    for j := 1 to n
+                        if j < di then 
+                            C[i, j] = C[i-1, j]
+                        else
+                            C[i, j] = min(C[i-1, j], 1 + C[i, j-di])
+            */
+            mincoinsdispsol: function(coins, total){
+                var C = [];
+                for(var i =0; i <= coins.length; i++)
+                    C[i] = [0];
+
+                for(var i=0; i <= total; i++)
+                    C[0][i] = i;
+
+                for(var i=1; i <= coins.length; i++){
+                    for(var j=1; j <= total ; j++){
+                        if (j < coins[i])
+                            C[i][j] = C[i-1][j];
+                        else
+                            C[i][j] = Math.min(C[i-1][j], 1 + C[i][j-coins[i]]);
+                    }
+                }
+                return C[coins.length-1][total];
             }
+
+
 
         }; //algo object
         return algos;

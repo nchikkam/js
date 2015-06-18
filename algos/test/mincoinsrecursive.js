@@ -1,4 +1,4 @@
-var count = (function three_sum(algos) {
+var count = (function mincoinsrecursive(algos) {
     var start = +new Date(),
         log,
         error,
@@ -29,16 +29,13 @@ var count = (function three_sum(algos) {
         }
     }
 
-    function TC(arr, three_sum, expected) {
-        assert(String(expected), String(algos.three_sum(arr, three_sum)));
+    function TC(coins, total, expected) {
+        assert(String(expected), String(algos.mincoinsrecursive(coins, total)));
     }
 
-    TC([6,4,3,2,1,7], 10, true);
-    TC([6,4,3,2,1,7], 19, false);
-    TC([12, 3, 4, 1, 6, 9], 24, true);
-    TC([1, 4, 45, 6, 10, 8], 22, true);
-    TC([1, 3, 5, 7, 9, 11, 13, 15], 30, false);
-    
+    TC([1, 5, 6, 8], 11, 2);
+    TC([1,3,4,6,7,9], 15, 2);
+
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];
 })(this.algos);
