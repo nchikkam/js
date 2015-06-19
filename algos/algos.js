@@ -732,7 +732,9 @@
                             C[i, j] = min(C[i-1, j], 1 + C[i, j-di])
             */
             mincoinsdispsol: function(coins, total){
-                var C = [];
+                var C = [];  // constructs all the possibel solutions of coin-i before coin-[i+1]
+                var optimalcoinsused = [];
+
                 for(var i =0; i <= coins.length; i++)
                     C[i] = [0];
 
@@ -747,9 +749,25 @@
                             C[i][j] = Math.min(C[i-1][j], 1 + C[i][j-coins[i]]);
                     }
                 }
-                return C[coins.length-1][total];
-            }
 
+                var row = coins.length-1;  // C[coins.length-1][total] has the solution, start backwards to get actual coins used.
+                var col = total;
+                var d = [];
+                while(total > 0 && row > 0 && col > 0){
+                    if ( C[row][col] == C[row-1][col]) {  // row's coin not used in optimal sol
+                        row = row - 1;
+                    }else{
+                        d.push(coins[row]);              // coins[row] was used, back track to that col which it came from.
+                        col = col - coins[row];
+                    }
+                }
+
+                while(col > 0){          // possibility that it ended up more single coins in the smaller denomination
+                    d.push(coins[row]);
+                    col = col - 1;
+                }
+                return d;
+            }
 
 
         }; //algo object
