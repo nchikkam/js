@@ -767,8 +767,58 @@
                     col = col - 1;
                 }
                 return d;
-            }
+            },
 
+            binomialrec: function binomialrec(n, k){
+                if (k == 0) return 1;
+                if (n == 0) return 0;
+                return binomialrec(n-1, k) + binomialrec(n-1, k-1);
+            },
+
+            binomial: function (N, K){  // will construct only upto needed values, not further
+                var dpTable = [];
+                for (var n = 0; n <= N; n++) 
+                    dpTable[n] = [];
+
+                for (var k = 1; k <= K; k++) dpTable[0][k] = 0;
+                for (var n = 0; n <= N; n++) dpTable[n][0] = 1;
+
+                for (var n = 1; n <= N; n++){
+                   for (var k = 1; k <= K; k++){
+                        dpTable[n][k] = dpTable[n-1][k-1] + dpTable[n-1][k];
+                    }
+                }
+                return dpTable[N][K];
+            },
+
+
+            lcs:  function (a, b) {  //https://www.ics.uci.edu/~eppstein/161/960229.html
+                    var m = a.length, 
+                        n = b.length,
+                        C = [], i, j;
+                    for (i = 0; i <= m; i++) C.push([0]);
+                    for (j = 0; j < n; j++) C[0].push(0);
+                        
+                    for (i = 0; i < m; i++)
+                        for (j = 0; j < n; j++)
+                            C[i+1][j+1] = a[i] === b[j] ? C[i][j]+1 : Math.max(C[i+1][j], C[i][j+1]);
+
+                    /*  int i = 0, j = 0;
+                        while(i < M && j < N) {
+                            if (x.charAt(i) == y.charAt(j)) {
+                                i++;
+                                j++;
+                            }
+                            else if (opt[i+1][j] >= opt[i][j+1]) i++;
+                            else                                 j++;
+                        }
+                    */
+                    return (function backtrack(i, j) {
+                        if (i*j === 0) { return ""; }
+                        if (a[i-1] === b[j-1]) { return backtrack(i-1, j-1) + a[i-1]; }
+                        return (C[i][j-1] > C[i-1][j]) ? backtrack(i, j-1) : backtrack(i-1, j);
+                    }(m, n));
+                }
 
         }; //algo object
         return algos;
