@@ -818,6 +818,120 @@
                         if (a[i-1] === b[j-1]) { return backtrack(i-1, j-1) + a[i-1]; }
                         return (C[i][j-1] > C[i-1][j]) ? backtrack(i, j-1) : backtrack(i-1, j);
                     }(m, n));
+                },
+
+                liss: function(seq){  // O(N^2)
+                    var dpTable = [];
+                    for (var i =0; i < seq.length; i++)
+                        dpTable[i] = 1;   // by default each int int is a longest increasing sub sequence by one
+
+                    for(var i=1; i < seq.length; i++){   
+                        for(var j=0; j < i; j++){
+                            if(seq[j] < seq[i]) 
+                                dpTable[i] = Math.max(dpTable[i], dpTable[j]+1);
+                        }
+                    }
+                    
+                    //return the max int calculated in the dpTable
+                    var max_number = 0;
+                    var max_index = 0;
+                    for(var i = 0; i < dpTable.length; i++){
+                        if (max_number < dpTable[i]){
+                            max_number = dpTable[i];
+                            max_index = i;
+                        }
+                    }
+
+                    // back track the actual numbers:
+                    //var maxValue = Math.max.apply(null, result);
+                    var liss_seq = [];
+                    liss_seq.push(seq[max_index]);
+                    for(var i = max_index ; i >= 0; i--){
+                        if(max_number==0)break;
+                        if(seq[max_index] > seq[i]  && dpTable[i] == max_number-1){
+                            liss_seq.push(seq[i]);
+                            max_number--;
+                        }
+                    }
+                    liss_seq.reverse();
+                    return liss_seq;
+                },
+
+                lissnlogn: function(seq){
+                    //http://www.geeksforgeeks.org/construction-of-longest-monotonically-increasing-subsequence-n-log-n/
+                    function getCeilIndex(pile, tileIndices, l, r, key) {
+                        while( r - l > 1 ) {
+                          var mid = (l + r)>>1;
+                          if( pile[tileIndices[mid]] >= key ) r = mid;
+                          else l = mid;
+                        }
+                        return r;
+                    }
+
+                    function lisspiles(seq){
+                        // Add boundary case, when array size is one
+                        var tailIndices = [];
+                        var prevIndices = [];
+
+                        for(var i =0; i < seq.length; i++){
+                            tailIndices[i] = 0;
+                            prevIndices[i] = 0xFFFF;
+                        }
+
+                        tailIndices[0] = 0;
+                        prevIndices[0] = -1;
+                        var l = 1; // it will always point to empty location
+                        for( var i = 1; i < seq.length ; i++ ) {
+                          if( seq[i] < seq[tailIndices[0]] ) {
+                             // new smallest value
+                             tailIndices[0] = i;
+                          } else if( seq[i] > seq[tailIndices[l-1]] ) {
+                             // seq[i] wants to extend largest subsequence
+                             prevIndices[i] = tailIndices[l-1];
+                             tailIndices[l++] = i;
+                          } else {
+                             // seq[i] wants to be a potential condidate of future subsequence
+                             // It will replace ceil value in tailIndices
+                            var pos = getCeilIndex(seq, tailIndices, -1, l-1, seq[i]);
+
+                            prevIndices[i] = tailIndices[pos-1];
+                            tailIndices[pos] = i;
+                          }
+                        }
+                        var ret = [];
+                        for( var i = tailIndices[l-1]; i >= 0 && i < seq.length; i = prevIndices[i] )
+                            ret.push(seq[i]);
+                        return ret.reverse();
+                    }
+                    return lisspiles(seq);
+                },
+
+                maxsubseqsum: function(arr){
+                    //www.algorithmist.com/index.php/Kadane's_Algorithm
+                    // above algo works only if there is atleast one +ve element.
+                    var maxSum = arr[0], 
+                        maxStartIndex = 0, 
+                        maxEndIndex = 0,
+                        max_element = arr[0];
+
+                    var currentMaxSum = arr[0];
+                    var currentStartIndex = 0;
+                    for(var i = 0; i < arr.length; i++){
+                        currentMaxSum = currentMaxSum + arr[i];
+                        max_element     = Math.max(max_element, arr[i]);
+                        if (currentMaxSum > maxSum) {
+                            maxSum = currentMaxSum;
+                            maxStartIndex = currentStartIndex;
+                            maxEndIndex = i;
+                        }else if (currentMaxSum < 0 ){
+                            currentMaxSum = 0;
+                            currentStartIndex = i + 1;
+                        }
+                    }
+                    if (maxSum == 0) 
+                        return [max_element];
+                    else 
+                        return arr.slice(maxStartIndex, maxEndIndex+1);  //slice is right exclusive
                 }
 
         }; //algo object
