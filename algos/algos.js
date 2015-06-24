@@ -991,6 +991,44 @@
                         return [max_element];
                     else 
                         return arr.slice(maxStartIndex, maxEndIndex+1);  //slice is right exclusive
+                },
+
+                mincostrec: function minCost(cost, m, n){
+                    /* 
+                        Returns cost of minimum cost path from (0,0) to (m, n) in mat[R][C]
+                        http://www.geeksforgeeks.org/dynamic-programming-set-6-min-cost-path
+                    */
+                    if (n < 0 || m < 0) return Number.MAX_VALUE;
+                    else if (m == 0 && n == 0)
+                      return cost[m][n];
+                    else
+                      return cost[m][n] + Math.min( minCost(cost, m-1, n-1),
+                                                    minCost(cost, m-1, n), 
+                                                    minCost(cost, m, n-1) 
+                                        );
+                },
+
+                mincost: function(cost, m, n){
+                    var tc = [];
+                    for(var i = 0; i < cost.length; i++)
+                        tc[i] = [];
+
+                    tc[0][0] = cost[0][0];
+
+                    /* Initialize first column of total cost(tc) array */
+                    for (var i = 1; i <= m; i++)
+                        tc[i][0] = tc[i-1][0] + cost[i][0];
+
+                    /* Initialize first row of tc array */
+                    for (var j = 1; j <= n; j++)
+                        tc[0][j] = tc[0][j-1] + cost[0][j];
+
+                    /* Construct rest of the tc array */
+                    for (i = 1; i <= m; i++)
+                        for (j = 1; j <= n; j++)
+                            tc[i][j] = Math.min(tc[i-1][j-1], tc[i-1][j], tc[i][j-1]) + cost[i][j];
+
+                    return tc[m][n];
                 }
 
         }; //algo object
