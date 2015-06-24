@@ -59,6 +59,65 @@
                 return fib;
             })(),
 
+            fiblogn: function(n){
+                function fibo(n) {
+                    /* refer to Knuth's TACP fundamentals of computer algorithms Vol.1
+                    * [ 1 1 ]     [ F(n+1) F(n)   ]
+                    * [ 1 0 ]   = [ F(n)   F(n-1) ]
+                    */
+                    if (n < 0) return -1; //no fibonacci for -ve numbers
+                    if (n <= 1) return n;
+                    var result = [
+                                [1, 0],        // identity matrix.
+                                [0, 1]
+                            ];
+
+                    var fiboM = [
+                                    [1, 1],        // identity matrix.
+                                    [1, 0]
+                                ];
+
+                    while (n > 0) {
+                        if (n%2 == 1) 
+                            result = multMatrix(result, fiboM);
+                        n = n >> 1;
+                        fiboM = multMatrix(fiboM, fiboM);
+                    }
+                    return result[1][0];
+                };
+
+                function multMatrix(m, n) {
+                    var a = m[0][0] * n[0][0] +  m[0][1] * n[1][0];
+                    var b = m[0][0] * n[0][1] +  m[0][1] * n[1][1];
+                    var c = m[1][0] * n[0][0] +  m[1][1] * n[0][1];
+                    var d = m[1][0] * n[0][1] +  m[1][1] * n[1][1];
+                    return [
+                            [a, b], 
+                            [c, d]
+                        ];
+                };
+                return fibo(n);
+            },
+
+            fibycombinator: function(n){  // nice one !
+                function Y(dn) {
+                    return (function(fn) {
+                        return fn(fn);
+                    }(function(fn) {
+                        return dn(function() {
+                            return fn(fn).apply(null, arguments);
+                        });
+                    }));
+                }
+                var fibY = Y(function(fn) {
+                    return function(n) {
+                        if (n === 0 || n === 1) return n;
+                        return fn(n - 1) + fn(n - 2);
+                    };
+                });
+                return fibY(n);
+            },
+
             gcd: function(a,b) {
                 a = Math.abs(a);
                 b = Math.abs(b);
