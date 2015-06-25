@@ -1,4 +1,4 @@
-var count = (function lcs(algos) {
+var count = (function matrixchainorder(algos) {
     var start = +new Date(),
         log,
         error,
@@ -29,27 +29,19 @@ var count = (function lcs(algos) {
         }
     }
 
-    function TC(src, dst, expected) {
-        assert(String(expected), String(algos.lcs(src, dst)));
+    function TC(arr, expected) {
+        assert(String(expected), String(algos.matrixchainorder(arr)));
     }
 
-    /*  --ggc--a-ccacg
-        acggcggat--acg 
-    */
-    TC("ggcaccacg", "acggcggatacg", "ggcaacg"); 
-    TC("XMJYAUZ", "MZJAWXU", "MJAU");
-    TC("nematode knowledge", "empty bottle", "emt ole"); // notice: lcs(a, b) != lcs(b, a)
-    TC("empty bottle", "nematode knowledge", "emt ole");
-    TC("ABCDGH", "AEDFHR", "ADH");
-    TC("AGGTAB", "GXTXAYB", "GTAB");
-    TC("ABCBDAB", "BDCABA", "BCBA");
-    TC("BDCABA", "ABCBDAB", "BDAB");  // notice: lcs(a, b) != lcs(b, a)
-    TC("thisisatest", "testing123testing", "tsitest");
-    TC("testing123testing", "thisisatest", "tsitest");
-    TC("1234", "1224533324", "1234");
-    TC("1224533324", "1234", "1234");
-    TC("rosettacode", "raisethysword", "rsetod");
-    TC("raisethysword", "rosettacode", "rsetod");
+    TC([2, 3, 6, 4, 5], 124);    // matrix with: 2X3, 3X6, 6X4, 4X5
+    
+    TC([10, 30, 5, 60], 4500);
+    TC([10, 100, 5, 30], 6500);
+    TC([1, 2, 3, 4, 3], 30);
+    TC([1, 2, 3, 4], 18);
+    TC([10, 100, 5, 50], 7500);
+    TC([30, 35, 15, 5, 10, 20, 25], 15125);  // CLR's Excercise.
+    
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];

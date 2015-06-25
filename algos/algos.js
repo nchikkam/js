@@ -1029,6 +1029,67 @@
                             tc[i][j] = Math.min(tc[i-1][j-1], tc[i-1][j], tc[i][j-1]) + cost[i][j];
 
                     return tc[m][n];
+                },
+
+                matrixchainorder: function (p) {
+                    // https://en.wikipedia.org/wiki/Matrix_chain_multiplication
+                    /*
+                        Notes: There are algorithms that are more efficient than the O(n3) 
+                        dynamic programming algorithm, though they are more complex.
+                        An algorithm published in 1981 by Hu and Shing achieves O(n log n) complexity
+                        They showed how the matrix chain multiplication problem can be transformed 
+                        (or reduced) into the problem of triangulation of a regular polygon
+                        Digg into Wikipedia to this. //@ToDo:
+                    */
+
+                    function getchain(s, i, j, inAResult){
+                        if (i != j) {
+                            getchain(s, i, s[i][j], inAResult);
+                            getchain(s, s[i][j] + 1, j, inAResult);
+
+                            var istr = inAResult[i] ? "_result " : " ";
+                            var jstr = inAResult[j] ? "_result " : " ";
+                            console.log(" A_" + i + istr + "* A_" + j + jstr);
+                            inAResult[i] = true;
+                            inAResult[j] = true;                            
+                        }
+                    }
+
+                    // Matrix Ai has dimension p[i-1] x p[i] for i = 1..n
+                    var n = p.length - 1;
+                    // m[i,j] = Minimum number of scalar multiplications (i.e., cost)
+                    // needed to compute the matrix A[i]A[i+1]...A[j] = A[i..j]
+                    // cost is zero when multiplying one matrix
+                    var m = []; 
+                    var s = [];
+                    for( var i =0; i <= n; i++){
+                        m[i] = [];
+                        m[i][i] = 0;
+                        s[i] = [];
+                    }
+
+                    for (var ii = 1; ii < n; ii++) {
+                        for (var i = 0; i < n - ii; i++) {
+                            var j = i + ii;
+                            m[i][j] = 100000;
+                            for (var k = i; k < j; k++) {
+                                var q = m[i][k] + m[k+1][j] + p[i]*p[k+1]*p[j+1];
+                                if (q < m[i][j]) {
+                                    m[i][j] = q;
+                                    s[i][j] = k;
+                                }
+                            }
+                        }
+                    }
+                    /*
+                        var inAResult = [];
+                        for( var i =0; i <= n; i++)
+                            inAResult[i] = false;
+
+                        getchain(s, 0, n-1, inAResult)
+                    */
+                    return m[0][n-1]; //gives the min multiplications possible
+                    
                 }
 
         }; //algo object
