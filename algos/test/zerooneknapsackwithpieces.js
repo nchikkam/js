@@ -30,6 +30,7 @@ var count = (function zerooneknapsackwithpieces(algos) {
     }
 
     function TC(data, W, expected) {
+        //console.log(JSON.stringify(algos.zerooneknapsackwithpieces(data, W)));
         assert(true, JSON.stringify(algos.zerooneknapsackwithpieces(data, W)) === JSON.stringify(expected));
     }
 
@@ -109,12 +110,59 @@ var count = (function zerooneknapsackwithpieces(algos) {
     };
     TC( data, 7, expected);
 
-    //TC( [8, 6, 5], [1, 3, 5], 7, [2, 5] );
-    //TC( [1, 4, 5, 7], [1, 3, 4, 5], 9, [4, 5] );
-    //TC([60,20,15,30], [4,2,3,5], 8, 80);
+
+    //case - 4: 
+    data = [
+            {name: 'apple',    weight: 1, value: 1, pieces:1},
+            {name: 'spoon',    weight: 3, value: 4, pieces:1},
+            {name: 'mug',      weight: 4, value: 5, pieces:1},
+            {name: 'soap',     weight: 5, value: 7, pieces:1}
+    ];
+    expected = {
+        apple:  {count: 1, weight: 1, value: 1},
+        spoon:  {count: 1, weight: 3, value: 4},
+        soap:   {count: 1, weight: 5, value: 7},   // careful, order here could cause the TC fail. 
+
+        'total-weight': 9,
+        'total-value': 12
+    };
+
+    TC( data, 9, expected);
+
+    //case - 5: 
+    data = [
+            {name: 'apple',    weight: 4, value: 60,  pieces:1},
+            {name: 'spoon',    weight: 2, value: 20, pieces:1},
+            {name: 'mug',      weight: 3, value: 15, pieces:1},
+            {name: 'soap',     weight: 5, value: 30, pieces:1}
+    ];
+    expected = {
+        apple:  {count: 1, weight: 4, value: 60},
+        spoon:  {count: 1, weight: 2, value: 20},
+
+        'total-weight': 6,
+        'total-value': 80
+    };
+
+    TC(data, 8, expected);
+
+    //case - 6:
+
     //TC([60, 100, 120], [10, 20, 30], 50, 220);
+    data = [
+            {name: 'apple',    weight: 10, value: 60,  pieces:1},
+            {name: 'spoon',    weight: 20, value: 100, pieces:1},
+            {name: 'mug',      weight: 30, value: 120, pieces:1}
+    ];
+    expected = {
+        spoon:  {count: 1, weight: 20, value: 100},
+        mug:    {count: 1, weight: 30, value: 120},
 
+        'total-weight': 50,
+        'total-value': 220
+    };
 
+    TC(data, 50, expected);
 
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
