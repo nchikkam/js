@@ -1221,6 +1221,38 @@
 
                     // eggFloor[n][k] holds the result
                     return eggFloor[n][k];
+                },
+
+                eggdropsdifferent: function (eggs, floors){  // This one was my favorite in Collage :)
+                    /*
+                        logic: Assume we are finding for 56 floors and 4 eggs, no of bits needed for 56 is 6.
+                        1. No eggs will be broken in only one case - when the break floor is > 56.
+                           We need not consider this case.
+                        2. Exactly one egg will be broken in six cases - (1,0,0,0,0,0) => 25, (0,1,0,0,0,0)
+                           => 40, (0,0,1,0,0,0) => 48, (0,0,0,1,0,0) => 52, (0,0,0,0,1,0) => 55 and
+                           (0,0,0,0,0,1) => 56. That is in 6 cases.
+                        3. Exactly two eggs will be broken in ncr(6, 2) = 15 cases.
+                        4. Exactly 3 eggs will be broken in ncr(6, 3) = 20 cases.
+                        5. Exactly 4 eggs will be broken in ncr(6, 4) = 15 cases.
+                        So the total no of cases is 6+15+20+15 = 56a
+
+                        General formula: 
+                         In d drops, 1 egg will be broken in ncr(e, 1) floors, 2 eggs will be broken in ncr(e, 2)
+                         floors... e eggs will be broken in ncr(d, e), which will cover all the floors considered. 
+                         So, Max no of floors that can be tested with d drops is:
+                             F(d, e) = SUMMATION(i=1..e) ncr(d, i)
+                         we must find the value of above expression when it equals or exceeds the floors.
+                    */
+                    var drops = 0, flrs = 0, max = 0;
+                    while(1){
+                        var max = 0;  //first max floors greater then floors.
+                        for(var i=0;i<=eggs;++i){  //no egg breaking, must be excluded, we do this by starting from 1
+                          max += this.binomial(drops, i);
+                        }
+                        if(max>floors) break;
+                        ++drops;
+                    }
+                    return drops;
                 }
 
         }; //algo object
