@@ -1253,6 +1253,66 @@
                         ++drops;
                     }
                     return drops;
+                },
+
+
+                lpsrec: function lps(seq, i, j){
+                    /*
+                        http://wcipeg.com/wiki/Longest_palindromic_subsequence
+                        Basic Idea: longest palidromic subsequence.
+                        // Everay single character is a palindrom of length 1
+                        L(i, i) = 1 for all indexes i in given sequence
+
+                        // IF first and last characters are not same
+                        If (X[i] != X[j])  L(i, j) =  max{L(i + 1, j),L(i, j - 1)} 
+
+                        // If there are only 2 characters and both are same
+                        Else if (j == i + 1) L(i, j) = 2  
+
+                        // If there are more than two characters, and first and last 
+                        // characters are same
+                        Else L(i, j) =  L(i + 1, j - 1) + 2
+                    */
+                    // Base Case 1: If there is only 1 character
+                    if (i == j) return 1;
+
+                    // Base Case 2: If there are only 2 characters and both are same
+                    if (seq[i] == seq[j] && i + 1 == j) return 2;
+
+                    // If the first and last characters match
+                    if (seq[i] == seq[j]) return lps (seq, i+1, j-1) + 2;
+
+                    // If the first and last characters do not match
+                    return Math.max( lps(seq, i, j-1), lps(seq, i+1, j) );
+                },
+
+                lps: function(str){
+                    var n = str.length,
+                        L = [];  // Create a table to store results of subproblems L[n][n]
+                    for(var i = 0; i < n; i++){
+                        L[i] = [];
+                        for(var j=0; j< n; j++)
+                            if(i == j)
+                                L[i][j] = 1; // Strings of length 1 are palindrome of lentgh 1
+                            else
+                                L[i][j] = 0;
+                    }
+
+                    // Build the table. Note that the lower diagonal values of table are
+                    // useless and not filled in the process. The values are filled in a
+                    // manner similar to Matrix Chain Multiplication DP solution (See
+                    // http://www.geeksforgeeks.org/archives/15553). cl is length of
+                    // substring
+                    for (var cl=2; cl<=n; cl++){
+                        for (var i=0; i<n-cl+1; i++){
+                            var j = i+cl-1;
+                            if (str[i] == str[j] && cl == 2) L[i][j] = 2;
+                            else if (str[i] == str[j]) L[i][j] = L[i+1][j-1] + 2;
+                            else L[i][j] = Math.max(L[i][j-1], L[i+1][j]);
+                        }
+                    }
+                    console.log(L);
+                    return L[0][n-1];
                 }
 
         }; //algo object
