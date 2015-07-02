@@ -1311,8 +1311,48 @@
                             else L[i][j] = Math.max(L[i][j-1], L[i+1][j]);
                         }
                     }
-                    console.log(L);
                     return L[0][n-1];
+                },
+
+                cutrodrec: function cutrope(price, n){
+                    //http://www.radford.edu/~nokie/classes/360/dp-rod-cutting.html
+                    if (n <= 0) return 0;
+                    var max_val = 0;   //some safe min integer
+
+                    // Recursively cut the rod in different pieces and compare different 
+                    // configurations
+                    for (var i = 0; i < price.length && i < n ; i++){
+                        var t = price[i] + cutrope(price, n-i-1);
+                        max_val = Math.max(max_val, t);
+                    }
+                    return max_val;
+                },
+
+
+                cutrod: function(price, n){
+                    var r = [],
+                        s = [];
+
+                    for(var i =0; i <= n; i++) r[i] = s[i] = 0;
+
+                    for( var j = 1; j <= n; j++){
+                        var q = 0;
+                        for(var i = 0; i < price.length && i < j; i++){
+                            if ( q < price[i] + r[j-i-1] ){
+                                q = price[i] + r[j-i-1];
+                                s[j] = i+1;
+                            }
+                        }
+                        r[j] = q;
+                    }
+                    // r[n] will contain max price we could get.
+
+                    var ret = [];  // get the actual cuts
+                    while (n > 0) {
+                        ret.push(s[n]);
+                        n = n - s[n];
+                    }
+                    return ret;
                 }
 
         }; //algo object
