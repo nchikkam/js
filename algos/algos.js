@@ -1500,6 +1500,37 @@
 
                     // Return the min cut value for complete string. i.e., str[0..n-1]
                     return C[n-1];
+                },
+
+                partition: function(arr){
+                    /* https://en.wikipedia.org/wiki/Partition_problem */
+                    var sum = 0;
+                    var n = arr.length;
+
+                    // Caculcate sun of all elements
+                    for (var i = 0; i < n; i++) sum += arr[i];
+                     
+                    if (sum%2 != 0)  return false;
+
+                    var part = []; //[sum/2+1][n+1]; // bool array
+                    for( var i =0; i < sum/2+1; i++) part[i] = [];
+
+                    for( var j=0; j <=n; j++)
+                        part[0][j] = true; // initialize top row as true
+
+                    // initialize leftmost column, except part[0][0], as 0
+                    for ( var i = 1; i <= sum/2; i++)
+                        part[i][0] = false;     
+                      
+                     // Fill the partition table in botton up manner 
+                     for (var i = 1; i <= sum/2; i++)  {
+                        for (j = 1; j <= n; j++)  {
+                            part[i][j] = part[i][j-1];
+                            if (i >= arr[j-1])
+                                part[i][j] = part[i][j] || part[i - arr[j-1]][j-1];
+                        }        
+                    }    
+                     return part[sum/2][n];
                 }
 
         }; //algo object
