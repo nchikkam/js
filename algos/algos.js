@@ -1434,6 +1434,72 @@
                         if (lis[i] + lds[i] - 1 > max)
                             max = lis[i] + lds[i] - 1;
                     return max;
+                },
+
+                minpalindromecuts: function(str){
+                    // Get the length of the string
+                    var n = str.length;
+
+                    /* 
+
+                        // i is the starting index and j is the ending index. i must be passed as 0 and j as n-1
+                        minPalPartion(str, i, j) = 0 if i == j. // When string is of length 1.
+                        minPalPartion(str, i, j) = 0 if str[i..j] is palindrome.
+
+                        // If none of the above conditions is true, then minPalPartion(str, i, j) can be 
+                        // calculated recursively using the following formula.
+                        minPalPartion(str, i, j) = Min { minPalPartion(str, i, k) + 1 +
+                                                         minPalPartion(str, k+1, j) } 
+                                                   where k varies from i to j-1
+                                                   
+                        Create two arrays to build the solution in bottom up manner
+                        C[i] = Minimum number of cuts needed for palindrome partitioning
+                                 of substring str[0..i]
+                        P[i][j] = true if substring str[i..j] is palindrome, else false
+                        Note that C[i] is 0 if P[0][i] is true 
+                    */
+                    var C = [];
+                    var P = []; // [][];  // dptable boolean array
+
+                    // Every substring of length 1 is a palindrome
+                    for (var i=0; i<n; i++){
+                        P[i] = [];
+                        P[i][i] = true;
+                    }
+
+                    /* L is substring length. Build the solution in bottom up manner by
+                       considering all substrings of length starting from 2 to n. */
+                    for (var L=2; L<=n; L++) {
+                        // For substring of length L, set different possible starting indexes
+                        for (var i=0; i<n-L+1; i++) {
+                            j = i+L-1; // Set ending index
+
+                            // If L is 2, then we just need to compare two characters. Else
+                            // need to check two corner characters and value of P[i+1][j-1]
+                            if (L == 2)
+                                P[i][j] = (str[i] == str[j]);
+                            else
+                                P[i][j] = (str[i] == str[j]) && P[i+1][j-1];
+                        }
+                    }
+
+                    for (var i=0; i<n; i++)
+                    {
+                        if (P[0][i] == true)
+                            C[i] = 0;
+                        else
+                        {
+                            C[i] = 10000000;
+                            for(var j=0;j<i;j++)
+                            {
+                                if(P[j+1][i] == true && 1+C[j]<C[i])
+                                    C[i]=1+C[j];
+                            }
+                        }
+                    }
+
+                    // Return the min cut value for complete string. i.e., str[0..n-1]
+                    return C[n-1];
                 }
 
         }; //algo object
