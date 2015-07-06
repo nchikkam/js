@@ -1393,6 +1393,47 @@
                     }
 
                     return ret.reverse();
+                },
+
+                lbs: function(arr){
+                    /*
+                        Longest Biotonic Sequence: 
+                        Idea:  find increasing seq from left, 
+                               find increasing seq from right, 
+                               find max length out of it.
+                        lbs() returns the length of the Longest Bitonic Subsequence in
+                        arr[] of size n. The function mainly creates two temporary arrays
+                        lis[] and lds[] and returns the maximum lis[i] + lds[i] - 1.
+
+                        lis[i] ==> Longest Increasing subsequence ending with arr[i]
+                        lds[i] ==> Longest decreasing subsequence starting with arr[i]
+                    */
+
+                    /* Allocate memory for LIS[], LDS[] and initialize L[I|D]S values as 1 for
+                      all indexes */
+                    var n = arr.length;
+                    var lis = [], lds = [];
+                    for ( var i = 0; i < n; i++ )
+                        lis[i] = lds[i] = 1;
+
+                    /* Compute LIS values from left to right */
+                    for ( var i = 1; i < n; i++ )
+                      for ( var j = 0; j < i; j++ )
+                         if ( arr[i] > arr[j] && lis[i] < lis[j] + 1)
+                            lis[i] = lis[j] + 1;
+
+                    /* Compute LDS values from right to left */
+                    for ( var i = n-2; i >= 0; i-- )
+                      for ( var j = n-1; j > i; j-- )
+                         if ( arr[i] > arr[j] && lds[i] < lds[j] + 1)
+                            lds[i] = lds[j] + 1;
+
+                    /* Return the maximum value of lis[i] + lds[i] - 1*/
+                    var max = lis[0] + lds[0] - 1;
+                    for (var i = 1; i < n; i++)
+                        if (lis[i] + lds[i] - 1 > max)
+                            max = lis[i] + lds[i] - 1;
+                    return max;
                 }
 
         }; //algo object
