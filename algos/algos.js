@@ -1353,6 +1353,46 @@
                         n = n - s[n];
                     }
                     return ret;
+                },
+
+                msis: function(arr){
+                    /* Notes: same as liss, but use sum as criteria, not length */
+                    var msis = [],
+                        actualseq = [], 
+                        max_val = 0,
+                        n = arr.length;
+
+                    /* Initialize msis values for all indexes */
+                    for ( var i = 0; i < n; i++ ){
+                        msis[i] = arr[i];
+                        actualseq[i] = i;
+                    }
+
+                    /* Compute maximum sum values in bottom up manner */
+                    for ( var i = 1; i < n; i++ )
+                        for ( var j = 0; j < i; j++ )
+                            if ( arr[i] > arr[j] && msis[i] < msis[j] + arr[i]){
+                                msis[i] = msis[j] + arr[i];
+                                actualseq[i] = j;
+                            }
+
+                    /* Pick maximum of all msis values */
+                    var index = 0;
+                    for ( i = 0; i < n; i++ ){
+                        if ( max_val < msis[i] ){
+                            max_val = msis[i];
+                            index = i;  // take the index to back track for the acutal values. 
+                        }
+                    }
+                    // reutnr max_val if only sum is needed, below code is to extracct actual elements used.
+                    var ret = [];
+                    while( max_val != 0 ){
+                        max_val -= arr[index];
+                        ret.push(arr[index]);
+                        index = actualseq[index];
+                    }
+
+                    return ret.reverse();
                 }
 
         }; //algo object
