@@ -1616,7 +1616,51 @@
                     var retArray = [];
                     printSolution(p, n, retArray);
                     return retArray;
+                },
+
+                longestoverlappingpairs: function(pairs_array){
+                    // this is a variation of the scheduling algorithm where we choose endtimes 
+                    // of the tasks to provide a better scheduling sequence.
+                    /*
+                        insight into something more:
+                        Throw the endpoints of the intervals into an array, marking them as either 
+                        start- or end-points. Sort them by breaking ties by placing end-points before 
+                        start-points if the intervals are closed, or the other way around if they're 
+                        half-open.
+
+                        1S, 2S, 3E, 4E, 5S, 10E, 12S, 13S, 14E, 15E
+                        Then iterate through the list, keeping track of how many intervals we're in 
+                        (this equates to number of start-points processed minus number of end-points). 
+                        Whenever we hit a start-point while we have are already in an interval, this 
+                        means we must have overlapping intervals.
+
+                        1S, 2S, 3E, 4E, 5S, 10E, 12S, 13S, 14E, 15E
+                            ^                          ^
+                           overlap                    overlap
+                        We can find which intervals overlap with which by storing data alongside the 
+                        end-points, and keeping track of which intervals we're in.
+
+                        This is an O(N logN) solution, with sorting being the main factor.
+                    */
+                    pairs_array.sort(function(pa, pb){return pa[0]-pb[0]});  //Using first indice to sort O(nlogn)
+
+                    var ans = 0;
+                    var LP = [];
+                    var n = pairs_array.length;
+
+                    for(var i=0;i<n;i++) LP[i] = 1;
+
+                    for(var i=1; i < n; i++)
+                        for(var j=0; j < i ; j++)
+                            if(pairs_array[j][1] < pairs_array[i][0]) 
+                                LP[i] = Math.max(LP[i], LP[j] + 1);
+
+                    for(var i=0;i<n;i++) 
+                        ans = Math.max(ans, LP[i]);
+
+                    return ans;
                 }
+
         }; //algo object
         return algos;
     }
