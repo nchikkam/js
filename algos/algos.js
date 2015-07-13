@@ -1659,6 +1659,83 @@
                         ans = Math.max(ans, LP[i]);
 
                     return ans;
+                },
+
+                minjumps: function(arr){
+                    /*
+                      There is a O(n) approach in greedy for this:
+                      http://stackoverflow.com/questions/23301358/linear-time-algorithm-for-minimum-number-of-jumps-required-to-reach-end
+                    */
+                    var jump = [];   // array to store min jumps 
+                    var result = []; // array to store actual indices
+
+                    jump[0] = 0;
+                    var INF = 1000000000; //some max safe int
+                    for(var i=1; i < arr.length ; i++) jump[i] = INF;
+
+                    for(var i=1; i < arr.length; i++){
+                        for(var j=0; j < i; j++){
+                            if( arr[j] + j >= i ){
+                                if( jump[i] > jump[j] + 1 ){
+                                    result[i] = j;
+                                    jump[i] = jump[j] + 1;
+                                }
+                            }
+                        }
+                    }
+                    i = arr.length-1;
+                    var ret = [];  //final array to return the actual jumps.
+                    while(i > 0){
+                        ret.push(i);
+                        i = result[i];
+                    }
+                    ret.push(i);
+                    return ret.reverse();
+                },
+
+                subsquarematrixwithallones: function(M){
+                    var S = []; //[R][C];
+                    var max_of_s, 
+                        max_i, 
+                        max_j; 
+
+                    var R = M.length;
+                    var C = M[0].length;
+
+                    /* Set first column of S[][]*/
+                    for(var i = 0; i < R; i++){
+                        S[i] = [];
+                        S[i][0] = M[i][0];
+                    }
+
+                    /* Set first row of S[][]*/    
+                    for(var j = 0; j < C; j++) S[0][j] = M[0][j];
+                      
+                    /* Construct other entries of S[][]*/
+                    for(var i = 1; i < R; i++) {
+                        for(var j = 1; j < C; j++) {
+                            if(M[i][j] == 1) 
+                                S[i][j] = Math.min(S[i][j-1], S[i-1][j], S[i-1][j-1]) + 1;
+                            else
+                                S[i][j] = 0;
+                        }    
+                    } 
+
+                    /* Find the maximum entry, and indexes of maximum entry 
+                     in S[][] */
+                    max_of_s = S[0][0]; 
+                    max_i = 0; 
+                    max_j = 0;
+                    for(var i = 0; i < R; i++) {
+                        for(var j = 0; j < C; j++) {
+                            if(max_of_s < S[i][j]) {
+                                max_of_s = S[i][j];
+                                max_i = i; 
+                                max_j = j;
+                            }        
+                        }                 
+                    }     
+                    return [max_i, max_j, max_of_s];
                 }
 
         }; //algo object
