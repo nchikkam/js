@@ -1736,6 +1736,115 @@
                         }                 
                     }     
                     return [max_i, max_j, max_of_s];
+                },
+
+                uglynumber: function(n){
+                    // below soluion is O(n) using dp and better than the classic one.
+                    var ugly = [],
+                        i2 = 0, 
+                        i3 = 0, 
+                        i5 = 0,
+                        next_multiple_of_2 = 2,
+                        next_multiple_of_3 = 3,
+                        next_multiple_of_5 = 5,
+                        next_ugly_no = 1;
+
+                    ugly[0] = 1;
+
+                    for(var i=1; i<n; i++){
+                        next_ugly_no = Math.min(
+                                        next_multiple_of_2,
+                                        next_multiple_of_3,
+                                        next_multiple_of_5
+                                    );
+                        ugly[i] = next_ugly_no;
+
+                        if(next_ugly_no == next_multiple_of_2) {
+                            i2 = i2+1;       
+                            next_multiple_of_2 = ugly[i2]*2;
+                        }
+                        if(next_ugly_no == next_multiple_of_3) {
+                           i3 = i3+1;
+                           next_multiple_of_3 = ugly[i3]*3;
+                        }
+                        if(next_ugly_no == next_multiple_of_5) {
+                           i5 = i5+1;
+                           next_multiple_of_5 = ugly[i5]*5;
+                        }
+                    }
+                    return next_ugly_no;
+                },
+
+                obstrec: function(keys, freqs){
+                    //optCost(int freq[], int i, int j)
+                    function optCost(freq, i, j){
+                        // Base cases
+                        if (j < i) return 0;     // If there are no elements in this subarray
+
+                        if (j == i) return freq[i];   // If there is one element in this subarray
+                         
+                        // Get sum of freq[i], freq[i+1], ... freq[j]
+                        var fsum = freq.slice(i, j+1).reduce(function(a, b){ return a + b;});
+
+                        // Initialize minimum value
+                        var min = 1000000;  //some safe max int
+
+                        // One by one consider all elements as root and recursively find cost
+                        // of the BST, compare the cost with min and update min if needed
+                        for (var r = i; r <= j; ++r) {
+                           var cost = optCost(freq, i, r-1) + optCost(freq, r+1, j);
+                           if (cost < min)
+                              min = cost;
+                        }
+
+                        // Return minimum value
+                        return min + fsum;
+                    }
+
+                    // The main function that calculates minimum cost of a Binary Search Tree.
+                    // It mainly uses optCost() to find the optimal cost.
+                    // Here array keys[] is assumed to be sorted in increasing order.
+                    // If keys[] is not sorted, then add code to sort keys, and rearrange
+                    // freq[] accordingly.
+                    return optCost(freqs, 0, freqs.length-1);
+                },
+
+                obst: function(keys, freq){
+                    //@ToDo: return the trees themselves once BST lib is ready.
+                    /* Create an auxiliary 2D matrix to store results of subproblems */
+                    var n = freq.length;
+                    var cost = []; //[n][n];
+                    var INF = 1000000;    // some safe max  int
+                    for(var i=0;i<freq.length; i++) cost[i] = [];
+
+                    /* cost[i][j] = Optimal cost of binary search tree that can be
+                       formed from keys[i] to keys[j].
+                       cost[0][n-1] will store the resultant cost */
+
+                    // For a single key, cost is equal to frequency of the key
+                    for (var i = 0; i < n; i++)     cost[i][i] = freq[i];
+
+                    // Now we need to consider chains of length 2, 3, ... .
+                    // L is chain length.
+                    for (var L=2; L<=n; L++) {
+                        // i is row number in cost[][]
+                        for (var i=0; i<n-L+1; i++) {
+                            // Get column number j from row number i and chain length L
+                            var j = i+L-1;
+                            cost[i][j] = INF;
+
+                            // Try making all keys in interval keys[i..j] as root
+                            for (var r=i; r<=j; r++) {
+                               // c = cost when keys[r] becomes root of this subtree
+                               var c = ((r > i)? cost[i][r-1]:0) + 
+                                       ((r < j)? cost[r+1][j]:0) + 
+                                       freq.slice(i, j+1).reduce(function(a, b){ return a + b;});
+                               if (c < cost[i][j])
+                                  cost[i][j] = c;
+                            }
+                        }
+                    }
+                    return cost[0][n-1];
                 }
 
         }; //algo object
