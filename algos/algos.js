@@ -1874,13 +1874,6 @@
                             subset[i][j] = subset[i-1][j];
                             if (j >= arr[i-1])
                                 subset[i][j] = subset[i][j] || subset[i-1][j-arr[i-1]];
-                            
-                            /*
-                            if(j - arr[i-1] >= 0)
-                                subset[i][j] = subset[i-1][j - arr[i-1]] || subset[i-1][j];
-                            else
-                                subset[i][j] = false;
-                            */
                         }
                     }
 
@@ -1890,7 +1883,7 @@
                     if (subset[n][sum]) {
                         i = n; 
                         j = sum;
-                    }else{
+                    }else{  // last cell in the table is false.
                         i -= 1;
                         j -= arr[i];
                     }
@@ -1903,9 +1896,118 @@
                             ret.push(arr[i]);
                         }
                     }
-
                     return ret.reverse();
+                },
+
+                maxsumsubmatrix: function(matrix){
+                    // Implementation of Kadane's algorithm for 1D array. The function returns the
+                    // maximum sum and stores starting and ending indexes of the maximum sum subarray
+                    // at addresses pointed by start and finish pointers respectively.
+                    // there is a O(n^2*logn) algo here: http://www.cosc.canterbury.ac.nz/tad.takaoka/cats02.pdf
+                    function kadane(arr) {
+                        var n = arr.length;
+                        // initialize sum, maxSum and
+                        var sum = 0, maxSum = -100000000, i;
+                     
+                        // Just some initial value to check for all negative values case
+                        var finish = -1, start;
+                     
+                        // local variable
+                        var local_start = 0;
+                     
+                        for (i = 0; i < n; ++i) {
+                            sum += arr[i];
+                            if (sum < 0) {
+                                sum = 0;
+                                local_start = i+1;
+                            }
+                            else if (sum > maxSum) {
+                                maxSum = sum;
+                                start = local_start;
+                                finish = i;
+                            }
+                        }
+                     
+                         // There is at-least one non-negative number
+                        if (finish != -1) return [maxSum, start, finish];
+                     
+                        // Special Case: When all numbers in arr[] are negative
+                        maxSum = arr[0];
+                        start = finish = 0;
+                     
+                        // Find the maximum element in array
+                        for (i = 1; i < n; i++) {
+                            if (arr[i] > maxSum) {
+                                maxSum = arr[i];
+                                start = finish = i;
+                            }
+                        }
+
+                        var ret = [maxSum, start, finish];
+                        //console.log(ret);
+
+                        return ret;
+                    }
+
+                    function findMaxSum(M){
+                        var maxSum = -100000000, // some safe min int
+                            finalLeft, finalRight, finalTop, finalBottom;
+
+                        var ROW = M.length;
+                        var COL = M[0].length;
+                        var left, right, i;
+                        // fill temp upto ROW no of zeros
+                        var temp = Array.apply(null, new Array(ROW)).map(Number.prototype.valueOf, 0);
+                        var sum, start, finish;
+
+                        // Set the left column
+                        for (left = 0; left < COL; ++left) {
+                            // Initialize all elements of temp as 0
+                            temp = Array.apply(null, new Array(ROW)).map(Number.prototype.valueOf, 0);
+
+                            // Set the right column for the left column set by outer loop
+                            for (right = left; right < COL; ++right) {
+                                // Calculate sum between current left and right for every row 'i'
+                                for (i = 0; i < ROW; ++i)
+                                    temp[i] += M[i][right];
+
+                                // Find the maximum sum subarray in temp[]. The kadane() function
+                                // also sets values of start and finish.  So 'sum' is sum of
+                                // rectangle between (start, left) and (finish, right) which is the
+                                //  maximum sum with boundary columns strictly as left and right.
+                                var result = kadane(temp);
+
+                                sum = result[0];
+                                start = result[1];
+                                finish = result[2];
+
+                                // Compare sum with maximum sum so far. If sum is more, then update
+                                // maxSum and other output values
+                                if (sum > maxSum){
+                                    maxSum = sum;
+                                    finalLeft = left;
+                                    finalRight = right;
+                                    finalTop = start;
+                                    finalBottom = finish;
+                                }
+                            }
+                        }
+
+                        // Print final values
+                        console.log("(Top, Left) : ", finalTop, finalLeft);
+                        console.log("(Bottom, Right): ", finalBottom, finalRight);
+                        console.log("Max sum is: ", maxSum);
+
+                        return [    [finalTop, finalLeft],
+                                    [finalBottom, finalRight], 
+                                    maxSum
+                        ];
+                    }
+
+                    return findMaxSum(matrix);
                 }
+
+
 
         }; //algo object
         return algos;
