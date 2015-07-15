@@ -1845,6 +1845,66 @@
                         }
                     }
                     return cost[0][n-1];
+                },
+
+                subsetsum: function(arr, sum){  // O(n^2)
+                    // The value of subset[i][j] will be true if there is a subset of set[0..j-1]
+                    //  with sum equal to i
+                    
+                    arr.sort(function(a, b){return a-b});
+
+                    var subset = []; //[sum+1][n+1];
+                    var n = arr.length;
+
+                    // If sum is 0, then answer is true
+                    for (var i = 0; i <= n; i++){
+                        subset[i] = [];
+                        subset[i][0] = true;
+                    }
+
+                    // If sum is not 0 and set is empty, then answer is false
+                    for (var i = 0; i <= sum; i++){
+                        subset[0][i] = false;
+                    }
+                        
+
+                    // Fill the subset table in botton up manner
+                    for (var i = 1; i <= n; i++) {
+                        for (var j = 1; j <= sum; j++) {
+                            subset[i][j] = subset[i-1][j];
+                            if (j >= arr[i-1])
+                                subset[i][j] = subset[i][j] || subset[i-1][j-arr[i-1]];
+                            
+                            /*
+                            if(j - arr[i-1] >= 0)
+                                subset[i][j] = subset[i-1][j - arr[i-1]] || subset[i-1][j];
+                            else
+                                subset[i][j] = false;
+                            */
+                        }
+                    }
+
+                    var ret = [];
+                    //back track the actual items from the set if there was a solution
+                    var i, j; 
+                    if (subset[n][sum]) {
+                        i = n; 
+                        j = sum;
+                    }else{
+                        i -= 1;
+                        j -= arr[i];
+                    }
+
+                    while(i > 0  && j > 0){
+                        if (subset[i-1][j]) i -= 1;
+                        else{
+                            i -= 1;
+                            j -= arr[i];
+                            ret.push(arr[i]);
+                        }
+                    }
+
+                    return ret.reverse();
                 }
 
         }; //algo object
