@@ -1993,11 +1993,6 @@
                             }
                         }
 
-                        // Print final values
-                        console.log("(Top, Left) : ", finalTop, finalLeft);
-                        console.log("(Bottom, Right): ", finalBottom, finalRight);
-                        console.log("Max sum is: ", maxSum);
-
                         return [    [finalTop, finalLeft],
                                     [finalBottom, finalRight], 
                                     maxSum
@@ -2005,9 +2000,58 @@
                     }
 
                     return findMaxSum(matrix);
+                },
+
+                binstringswithoutconsecutiveones: function(n){
+                    /*
+                        src: http://courses.csail.mit.edu/6.006/oldquizzes/solutions/q2-f2009-sol.pdf
+                        Let a[i] be the number of binary strings of length i which do not contain
+                        any two consecutive 1’s and which end in 0. Similarly, let b[i] be the number of such
+                        strings which end in 1. We can append either 0 or 1 to a string ending in 0, but we can
+                        only append 0 to a string ending in 1. This yields the recurrence relation:
+                        a[i] = a[i − 1] + b[i − 1]
+                        b[i] = a[i − 1]
+                        The base cases of our recurrence are a[1] = b[1] = 1. The total number of strings of
+                        length i is just a[i] + b[i].
+                    */
+                    var a, b, c, d;
+                    c = d = 1;
+                    for (var i = 1; i < n; i++) {
+                        a = c + d;
+                        b = c;
+                        c = a;
+                        d = b;
+                    }
+                    return a + b;
+                },
+
+                binstringswithoutconsecutiveoneslogn: function(n){
+                    /*  really like this idea: log(n)
+                        src: http://ideone.com/TJdQQZ
+                    */
+                    var save0 = {},
+                        save1 = {};  // maps for memoization
+
+                    function end0(n) {
+                        if (n <= 1) return 1;
+                        if (save0[n]) return save0[n];
+                        var a = n>>1;  //just divide by 2
+                        var b = n-a;
+                        var ans = save0[n] = end0(a)*end0(b)+end1(a)*end0(b-1);
+                        return ans;
+                    }
+                     
+                    function end1(n) {
+                        if (n == 0) return 0;
+                        if (n == 1) return 1;
+                        if (save1[n]) return save1[n];
+                        var a = n>>1;
+                        var b = n-a;
+                        var ans = save1[n] = end0(a)*end1(b)+end1(a)*end1(b-1);
+                        return ans;
+                    }
+                    return (end0(n)+end1(n));
                 }
-
-
 
         }; //algo object
         return algos;
