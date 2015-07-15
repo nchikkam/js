@@ -2108,6 +2108,7 @@
                             }
                         }
                         return T[0][n-1];
+                        //@ToDo: return the list of all such WFF(s)
                     }
 
 
