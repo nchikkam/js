@@ -2138,6 +2138,221 @@
                         }
 
                         return countways(n+1, m);
+                    },
+
+                    minTriangulationRec: function(points){
+                        // A utility function to find distance between two points in a plane
+                        function dist(p1, p2) {
+                            return Math.sqrt((p1[0] - p2[0])*(p1[0] - p2[0]) +
+                                        (p1[1] - p2[1])*(p1[1] - p2[1]));
+                        }
+                         
+                        // A utility function to find cost of a triangle. The cost is considered
+                        // as perimeter (sum of lengths of all edges) of the triangle
+                        function cost(points, i, j, k)
+                        {
+                            var p1 = points[i], 
+                                p2 = points[j], 
+                                p3 = points[k];
+                            return dist(p1, p2) + dist(p2, p3) + dist(p3, p1);
+                        }
+                        function mTC(points, i, j)
+                        {
+                           // There must be at least three points between i and j
+                           // (including i and j)
+                           if (j < i+2) return 0;
+                         
+                           // Initialize result as infinite
+                           var res = 100000000;  // some safe max int
+                         
+                           // Find minimum triangulation by considering all
+                           for (var k=i+1; k<j; k++)
+                                res = Math.min(
+                                    res, 
+                                    (mTC(points, i, k) + mTC(points, k, j) + cost(points, i, k, j)));
+                           return  res;
+                        }
+
+                        return mTC(points, 0, points.length-1);
+                    },
+
+                    minTriangulation: function(points){
+                        /*
+                            Time complexity of the above dynamic programming solution is O(n3).
+
+                            Please note that the below implementations assume that the points of covnvex polygon 
+                            are given in order (either clockwise or anticlockwise)
+                        */
+                        // A utility function to find distance between two points in a plane
+                        function dist(p1, p2) {
+                            return Math.sqrt((p1[0] - p2[0])*(p1[0] - p2[0]) +
+                                        (p1[1] - p2[1])*(p1[1] - p2[1]));
+                        }
+                         
+                        // A utility function to find cost of a triangle. The cost is considered
+                        // as perimeter (sum of lengths of all edges) of the triangle
+                        function cost(points, i, j, k)
+                        {
+                            var p1 = points[i], 
+                                p2 = points[j], 
+                                p3 = points[k];
+                            return dist(p1, p2) + dist(p2, p3) + dist(p3, p1);
+                        }
+                        function mTC(points, i, j) {
+                           // There must be at least 3 points to form a triangle
+                           var n = points.length;
+                           var MAX = 100000000;
+                           if (n < 3) return 0;
+                         
+                           // table to store results of subproblems.  table[i][j] stores cost of
+                           // triangulation of points from i to j.  The entry table[0][n-1] stores
+                           // the final result.
+                           var table = []; //[n][n];
+                           for(var i =0; i < n; i++)
+                                table[i] = [];
+                         
+                           // Fill table using above recursive formula. Note that the table
+                           // is filled in diagonal fashion i.e., from diagonal elements to
+                           // table[0][n-1] which is the result.
+                           for (var gap = 0; gap < n; gap++) {
+                              for (var i = 0, j = gap; j < n; i++, j++) {
+                                  if (j < i+2) table[i][j] = 0.0;
+                                  else {
+                                      table[i][j] = MAX;
+                                      for (var k = i+1; k < j; k++) {
+                                        var val = table[i][k] + table[k][j] + cost(points,i,j,k);
+                                        if (table[i][j] > val) table[i][j] = val;
+                                      }
+                                  }
+                              }
+                           }
+                           return  table[0][n-1];
+                        }
+
+                        return mTC(points, 0, points.length-1);
+                    },
+
+                    mobnumberkeypadrec: function(keypad, n){
+                        /*
+                            If N = 1
+                              Count(i, j, N) = 10  
+                            Else
+                              Count(i, j, N) = Sum of all Count(r, c, N-1) where (r, c) is new 
+                                   position after valid move of length 1 from current 
+                                   position (i, j)
+                        */
+                        // left, up, right, down move from current location
+                        var row = [0, 0, -1, 0, 1];
+                        var col = [0, -1, 0, 1, 0];
+
+                        // Returns count of numbers of length n starting from key position
+                        // (i, j) in a numeric keyboard.
+                        function getCountUtil(keypad, i, j, n) {
+                            if (keypad.length == 0 || n <= 0) return 0;
+                         
+                            // From a given key, only one number is possible of length 1
+                            if (n == 1) return 1;
+                         
+                            var k=0, 
+                                move=0, 
+                                ro=0, 
+                                co=0, 
+                                totalCount = 0;
+                         
+                            // move left, up, right, down from current location and if
+                            // new location is valid, then get number count of length
+                            // (n-1) from that new position and add in count obtained so far
+                            for (move=0; move<5; move++) {
+                                ro = i + row[move];
+                                co = j + col[move];
+                                if (ro >= 0 && ro <= 3 && co >=0 && co <= 2 && keypad[ro][co] != '*' && keypad[ro][co] != '#') {
+                                    totalCount += getCountUtil(keypad, ro, co, n-1);
+                                }
+                            }
+                         
+                            return totalCount;
+                        }
+                         
+                        // Return count of all possible numbers of length n
+                        // in a given numeric keyboard
+                        function getCount(keypad, n) {
+                            // Base cases
+                            if (keypad.length == 0 || n <= 0) return 0;
+                            if (n == 1) return 10;
+                         
+                            var i=0, j=0, totalCount = 0;
+                            for (i=0; i<4; i++) { // Loop on keypad row
+                                for (j=0; j<3; j++) {   // Loop on keypad column
+                                    // Process for 0 to 9 digits
+                                    if (keypad[i][j] != '*' && keypad[i][j] != '#') {
+                                        // Get count when number is starting from key
+                                        // position (i, j) and add in count obtained so far
+                                        totalCount += getCountUtil(keypad, i, j, n);
+                                    }
+                                }
+                            }
+                            return totalCount;
+                        }
+
+                        return getCount(keypad, n);
+                    },
+
+                    mobnumberkeypad: function(keypad, n) {
+                        if(keypad.length == 0 || n <= 0) return 0;
+                        if(n == 1) return 10;
+                     
+                        // odd[i], even[i] arrays represent count of numbers starting
+                        // with digit i for any length j
+                        var odd = [], 
+                            even = [];
+                        var i = 0, 
+                            j = 0, 
+                            useOdd = 0, 
+                            totalCount = 0;
+                     
+                        for (i=0; i<=9; i++) odd[i] = 1;  // for j = 1
+                     
+                        for (j=2; j<=n; j++) { // Bottom Up calculation from j = 2 to n
+                        
+                            useOdd = 1 - useOdd;
+                     
+                            // Here we are explicitly writing lines for each number 0
+                            // to 9. But it can always be written as DFS on 4X3 grid
+                            // using row, column array valid moves
+                            if(useOdd == 1) {
+                                even[0] = odd[0] + odd[8];
+                                even[1] = odd[1] + odd[2] + odd[4];
+                                even[2] = odd[2] + odd[1] + odd[3] + odd[5];
+                                even[3] = odd[3] + odd[2] + odd[6];
+                                even[4] = odd[4] + odd[1] + odd[5] + odd[7];
+                                even[5] = odd[5] + odd[2] + odd[4] + odd[8] + odd[6];
+                                even[6] = odd[6] + odd[3] + odd[5] + odd[9];
+                                even[7] = odd[7] + odd[4] + odd[8];
+                                even[8] = odd[8] + odd[0] + odd[5] + odd[7] + odd[9];
+                                even[9] = odd[9] + odd[6] + odd[8];
+                            } else {
+                                odd[0] = even[0] + even[8];
+                                odd[1] = even[1] + even[2] + even[4];
+                                odd[2] = even[2] + even[1] + even[3] + even[5];
+                                odd[3] = even[3] + even[2] + even[6];
+                                odd[4] = even[4] + even[1] + even[5] + even[7];
+                                odd[5] = even[5] + even[2] + even[4] + even[8] + even[6];
+                                odd[6] = even[6] + even[3] + even[5] + even[9];
+                                odd[7] = even[7] + even[4] + even[8];
+                                odd[8] = even[8] + even[0] + even[5] + even[7] + even[9];
+                                odd[9] = even[9] + even[6] + even[8];
+                            }
+                        }
+                     
+                        // Get count of all possible numbers of length "n" starting
+                        // with digit 0, 1, 2, ..., 9
+                        totalCount = 0;
+                        if(useOdd == 1) {
+                            for (i=0; i<=9; i++) totalCount += even[i];
+                        } else {
+                            for (i=0; i<=9; i++) totalCount += odd[i];
+                        }
+                        return totalCount;
                     }
                     
         }; //algo object
