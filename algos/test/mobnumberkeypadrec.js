@@ -40,11 +40,16 @@ var count = (function mobnumberkeypadrec(algos) {
         ['*','0','#']
     ];
 
-    TC(keypad, 1, 10);
-    TC(keypad, 2, 36);
-    TC(keypad, 3, 138);
-    TC(keypad, 4, 532);
-    TC(keypad, 5, 2062);
+    TC(keypad,  1, 10);
+    TC(keypad,  2, 36);
+    TC(keypad,  3, 138);
+    TC(keypad,  4, 532);
+    TC(keypad,  5, 2062);
+    TC(keypad,  6, 7990);
+    TC(keypad,  7, 30984);
+    TC(keypad,  8, 120130);
+    TC(keypad,  9, 465832);
+    TC(keypad, 10, 1806282);
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];
