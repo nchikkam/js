@@ -2109,11 +2109,37 @@
                         }
                         return T[0][n-1];
                         //@ToDo: return the list of all such WFF(s)
+                    },
+
+                    countstepsrec: function(n, m){
+
+                        function countminsteps(n, m){
+                            if (n <= 1) return n;
+                            var res = 0;
+                            for (var i = 1; i<=m && i<=n; i++)
+                                res += countminsteps(n-i, m);
+                            return res;
+                        }
+
+                        // Returns number of ways to reach s'th stair
+                        return countminsteps(n+1, m);
+                    },
+
+                    countsteps: function(n, m){
+                        function countways(n, m) {
+                            var res = []; 
+                            res[0] = 1; res[1] = 1;
+                            for (var i=2; i<n; i++) {
+                                res[i] = 0;
+                                for (var j=1; j<=m && j<=i; j++)
+                                    res[i] += res[i-j];
+                            }
+                            return res[n-1];
+                        }
+
+                        return countways(n+1, m);
                     }
-
-
-
-
+                    
         }; //algo object
         return algos;
     }
