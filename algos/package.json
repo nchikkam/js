@@ -1,13 +1,13 @@
 {
   "name": "algos.js",
-  "description": "A Simple library for doing calculations with Numbers ;) ",
+  "description": "A list of Classic Computer Science DP algorithms",
   "version": "1.0.0",
   "keywords": [
     "algos"
   ],
   "repository" : {
     "type": "git",
-    "url": "<git url to be done>"
+    "url": "https://github.com/nchikkam/js.git"
   },
   "main": "algos",
   "author": {
