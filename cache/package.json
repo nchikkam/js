@@ -1,0 +1,25 @@
+{
+  "name": "cache",
+  "description": "A Simple library for doing calculations with Numbers ;) ",
+  "version": "1.0.0",
+  "keywords": [
+    "cache"
+  ],
+  "repository" : {
+    "type": "git",
+    "url": "<git url to be done>"
+  },
+  "main": "cache",
+  "author": {
+    "name": "Narayana Chikkam",
+    "email": "nchikkam@gmail.com"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "node ./test/all-tests.js",
+    "build": "uglifyjs cache.js --source-map cache.js.map -c -m -o cache.min.js --preamble \"/* cache.js v2.0.7 git_url/cache.js/LICENCE */\""
+  }
+}

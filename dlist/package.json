@@ -1,0 +1,25 @@
+{
+  "name": "dllist",
+  "description": "A Simple Implementation of Doubly Linked List in Java Script  ;) ",
+  "version": "1.0.0",
+  "keywords": [
+    "dllist"
+  ],
+  "repository" : {
+    "type": "git",
+    "url": "<git url to be done>"
+  },
+  "main": "dllist",
+  "author": {
+    "name": "Narayana Chikkam",
+    "email": "nchikkam@gmail.com"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "node ./test/all-tests.js",
+    "build": "uglifyjs dllist.js --source-map dllist.js.map -c -m -o dllist.min.js --preamble \"/* dllist.js v2.0.7 git_url/dllist.js/LICENCE */\""
+  }
+}
